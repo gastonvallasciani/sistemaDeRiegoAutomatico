@@ -1,0 +1,18 @@
+
+Característica del proyecto: 
+ - IDE utilizado: IAR
+ - Desarrollado en Baremetal.
+ - Microcontrolador utilizado: stm32f103c8t6.
+ - Librería utilizada:STM32F10x_StdPeriph_Lib_V3.5.0.
+
+Hecho:
+ - Template del proyecto creado en iar.
+ - SysTick configurado en 1ms y usado como base de tiempo del proyecto.
+ - Libreria de timers con base de tiempo del Systick.
+ - Se incluye el archivo board.h. Incluye la definición de los pines de la placa. Incluye includes de librerias std, c standard. 
+ - Se incluye librería de alto nivel para manejo de led con máquina de estados.
+
+Próximos pasos:
+ - Cargar el proyecto en github.
+ - Agregar definiciones de tiempos en timers_manager.h en funcion de ms.
+ - Implementar modulo para lectura de pin con ADC.
