@@ -2181,6 +2181,12 @@
   <group>
     <name>user</name>
     <group>
+      <name>analog reading</name>
+      <file>
+        <name>$PROJ_DIR$\..\user\analog reading\analog_reading_manager.c</name>
+      </file>
+    </group>
+    <group>
       <name>led</name>
       <file>
         <name>$PROJ_DIR$\..\user\led\led_manager.c</name>

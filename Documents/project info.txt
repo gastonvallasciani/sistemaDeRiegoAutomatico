@@ -11,8 +11,10 @@ Hecho:
  - Libreria de timers con base de tiempo del Systick.
  - Se incluye el archivo board.h. Incluye la definición de los pines de la placa. Incluye includes de librerias std, c standard. 
  - Se incluye librería de alto nivel para manejo de led con máquina de estados.
+ - Se creó un repositorio Git y cargó el proyecto en github.
+ - Se implementó el módulo para lectura de 3 canales del ADC1 con DMA canal 1, estos tres ADCs serán utilizados para lectura de 2 LDRs y la tensión de batería.
 
 Próximos pasos:
- - Cargar el proyecto en github.
  - Agregar definiciones de tiempos en timers_manager.h en funcion de ms.
- - Implementar modulo para lectura de pin con ADC.
+ - Emproiljar el módulo de lectura de ADCs, implementar la lectura del sensor de temperatura interna del micro.
+ 

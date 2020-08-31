@@ -325,6 +325,7 @@
           <state>$PROJ_DIR$/../user</state>
           <state>$PROJ_DIR$/../user/timers</state>
           <state>$PROJ_DIR$/../user/led</state>
+          <state>$PROJ_DIR$/../user/analog reading</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -2008,6 +2009,12 @@
   </group>
   <group>
     <name>user</name>
+    <group>
+      <name>analog reading</name>
+      <file>
+        <name>$PROJ_DIR$\..\user\analog reading\analog_reading_manager.c</name>
+      </file>
+    </group>
     <group>
       <name>led</name>
       <file>

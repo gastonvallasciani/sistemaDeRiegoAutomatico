@@ -1,0 +1,9 @@
+ESPECIFICACIONES TÉCNICAS
+
+Sensor: LDR GL5528
+Resistencia en luz (10 lux): 8K-20K Ohm
+Resistencia en oscuridad: 1M Ohm
+Voltaje máx: 150V
+Potencia máx: 100mW
+Material fotosensible: CdS (Sulfato de Sodio)
+Frecuencia de luz pico: 540 nm
