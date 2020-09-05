@@ -11,29 +11,63 @@
 //------------------------------------------------------------------------------
 #include "analog_reading_manager.h"
 //------------------------------------------------------------------------------
-//--------------------DECLARACION DE VARIABLES INTERNAS-------------------------
+//--------------------DECLARACION DE VARIABLES PRIVADAS-------------------------
 //------------------------------------------------------------------------------
-#define ADC1_DR_Address    ((uint32_t)0x4001244C)
+#define ADC1_DR_Address           ((uint32_t)0x4001244C)
+#define NUM_ADC_READ_CHANNELS     3
+#define BATTERY_VOLTAGE           ADCConvertedValue[0]
+#define WIRED_LDR1_READING_VALUE  ADCConvertedValue[1]
+#define WIRED_LDR2_READING_VALUE  ADCConvertedValue[2]
 //------------------------------------------------------------------------------
 //--------------------DECLARACION DE VARIABLES INTERNAS-------------------------
 //------------------------------------------------------------------------------
 ADC_InitTypeDef ADC_InitStructure;
 DMA_InitTypeDef DMA_InitStructure;
-__IO uint16_t   ADCConvertedValue[3];
-
+__IO uint16_t   ADCConvertedValue[NUM_ADC_READ_CHANNELS];
 //------------------------------------------------------------------------------
 //--------------------DECLARACION DE VARIABLES EXTERNAS-------------------------
 //------------------------------------------------------------------------------
- void RCC_Configuration(void);
- void GPIO_Configuration(void);
+ 
 //------------------------------------------------------------------------------
-//-----------------PROTOTIPOS DE FUNCIONES INTERNAS-----------------------------
+//-----------------PROTOTIPOS DE FUNCIONES PRIVADAS-----------------------------
 //------------------------------------------------------------------------------
+void RCC_Configuration(void);
+void GPIO_Configuration(void);
+//------------------------------------------------------------------------------
+//------------------DEFINICION DE FUNCIONES PRIVADAS-----------------------------
+//------------------------------------------------------------------------------
+/**
+  * @brief  Configures the different system clocks.
+  * @param  None
+  * @retval None
+  */
+void RCC_Configuration(void)
+{
+  /* ADCCLK = PCLK2/4 */
+  RCC_ADCCLKConfig(RCC_PCLK2_Div4); 
+  /* Enable peripheral clocks ------------------------------------------------*/
+  /* Enable DMA1 clock */
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
 
-//------------------------------------------------------------------------------
-//------------------DEFINICION DE FUNCIONES INTERNAS-----------------------------
-//------------------------------------------------------------------------------
+  /* Enable ADC1 and GPIOC clock */
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_GPIOA, ENABLE);
+}
 
+/**
+  * @brief  Configures the different GPIO ports as analog inputs.
+  * @param  None
+  * @retval None
+  */
+void GPIO_Configuration(void)
+{
+  GPIO_InitTypeDef GPIO_InitStructure;
+
+  /* Configure BATTERY_READING_PIN and LDR_PIN as analog input ---------------*/
+  GPIO_InitStructure.GPIO_Pin  = BATTERY_READING_PIN | WIRED_LDR1_PIN | 
+                                 WIRED_LDR2_PIN;
+  GPIO_InitStructure.GPIO_Mode = ANALOG_READING_MODE;
+  GPIO_Init(ANALOG_READING_PORT, &GPIO_InitStructure);
+}
 //------------------------------------------------------------------------------
 //------------------DEFINICION DE FUNCIONES PUBLICAS----------------------------
 //------------------------------------------------------------------------------
@@ -80,8 +114,8 @@ void analog_reading__init(void)
   
    /* ADC1 regular channel14 configuration */ 
   ADC_RegularChannelConfig(ADC1, BATTERY_ADC_CHANNEL, 1, ADC_SampleTime_55Cycles5);
-  ADC_RegularChannelConfig(ADC1, LDR1_ADC_CHANNEL, 2, ADC_SampleTime_55Cycles5);
-  ADC_RegularChannelConfig(ADC1, LDR2_ADC_CHANNEL, 3, ADC_SampleTime_28Cycles5);
+  ADC_RegularChannelConfig(ADC1, WIRED_LDR1_ADC_CHANNEL, 2, ADC_SampleTime_55Cycles5);
+  ADC_RegularChannelConfig(ADC1, WIRED_LDR2_ADC_CHANNEL, 3, ADC_SampleTime_55Cycles5);
 
   /* Enable ADC1 DMA */
   ADC_DMACmd(ADC1, ENABLE);
@@ -105,49 +139,42 @@ void analog_reading__init(void)
   
   /* Start ADC1 Software Conversion */ 
   ADC_SoftwareStartConvCmd(ADC1, ENABLE);
-
-  //ADC_TempSensorVrefintCmd(ENABLE);
-  
-  /* temp reading */ 
- // ADC_RegularChannelConfig(ADC1, ADC_Channel_TempSensor, 1, ADC_SampleTime_55Cycles5);
 }
 //------------------------------------------------------------------------------
-uint16_t value = 0;
-void analog_reading__handler(void)
-{
-  value = ADCConvertedValue[0];
-}
-
 /**
-  * @brief  Configures the different system clocks.
-  * @param  None
-  * @retval None
+  * @brief  Return the battery voltage reading value in the param given as a 
+  *         pointer.
+  * @param  battery_voltage pointer to the return value.
+  * @retval 1 always
   */
-void RCC_Configuration(void)
+uint8_t analog_reading__get_battery_voltage(uint16_t *battery_voltage)
 {
-  /* ADCCLK = PCLK2/4 */
-  RCC_ADCCLKConfig(RCC_PCLK2_Div4); 
-  /* Enable peripheral clocks ------------------------------------------------*/
-  /* Enable DMA1 clock */
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
-
-  /* Enable ADC1 and GPIOC clock */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_GPIOA, ENABLE);
+  *battery_voltage = BATTERY_VOLTAGE;
+  return(1);
 }
-
+//------------------------------------------------------------------------------
 /**
-  * @brief  Configures the different GPIO ports as analog inputs.
-  * @param  None
-  * @retval None
+  * @brief  Return the wired ldr 1 reading value in the param given as a 
+  *         pointer.
+  * @param  wired_ldr1_reading_value pointer to the return value.
+  * @retval 1 always
   */
-void GPIO_Configuration(void)
+uint8_t analog_reading__get_ldr1_reading(uint16_t *wired_ldr1_reading_value)
 {
-  GPIO_InitTypeDef GPIO_InitStructure;
-
-  /* Configure BATTERY_READING_PIN and LDR_PIN as analog input ---------------*/
-  GPIO_InitStructure.GPIO_Pin  = BATTERY_READING_PIN | LDR1_PIN | LDR2_PIN;
-  GPIO_InitStructure.GPIO_Mode = ANALOG_READING_MODE;
-  GPIO_Init(ANALOG_READING_PORT, &GPIO_InitStructure);
+  *wired_ldr1_reading_value = WIRED_LDR1_READING_VALUE;
+  return(1);
+}
+//------------------------------------------------------------------------------
+/**
+  * @brief  Return the wired ldr 2 reading value in the param given as a 
+  *         pointer.
+  * @param  wired_ldr2_reading_value pointer to the return value.
+  * @retval 1 always
+  */
+uint8_t analog_reading__get_ldr2_reading(uint16_t *wired_ldr2_reading_value)
+{
+  *wired_ldr2_reading_value = WIRED_LDR2_READING_VALUE;
+  return(1);
 }
 //------------------------------------------------------------------------------
 //----------------------------END OF FILE---------------------------------------

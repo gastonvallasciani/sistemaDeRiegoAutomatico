@@ -28,7 +28,10 @@
 //--------------------DECLARACION DE FUNCIONES PUBLICAS-------------------------
 //------------------------------------------------------------------------------
 void analog_reading__init(void);
-void analog_reading__handler(void);
+
+uint8_t analog_reading__get_battery_voltage(uint16_t *battery_voltage);
+uint8_t analog_reading__get_ldr1_reading(uint16_t *wired_ldr1_reading_value);
+uint8_t analog_reading__get_ldr2_reading(uint16_t *wired_ldr2_reading_value);
 //------------------------------------------------------------------------------
 //--------------------FIN DEL ARCHIVO-------------------------------------------
 //------------------------------------------------------------------------------
