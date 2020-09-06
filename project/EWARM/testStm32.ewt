@@ -2198,6 +2198,12 @@
         <name>$PROJ_DIR$\..\user\timers\timers_manager.c</name>
       </file>
     </group>
+    <group>
+      <name>uart</name>
+      <file>
+        <name>$PROJ_DIR$\..\user\uart\uart_manager.c</name>
+      </file>
+    </group>
   </group>
   <file>
     <name>$PROJ_DIR$\main.c</name>

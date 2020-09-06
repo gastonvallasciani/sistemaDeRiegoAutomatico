@@ -12,9 +12,9 @@ Hecho:
  - Se incluye el archivo board.h. Incluye la definición de los pines de la placa. Incluye includes de librerias std, c standard. 
  - Se incluye librería de alto nivel para manejo de led con máquina de estados.
  - Se creó un repositorio Git y cargó el proyecto en github.
- - Se implementó el módulo para lectura de 3 canales del ADC1 con DMA canal 1, estos tres ADCs serán utilizados para lectura de 2 LDRs y la tensión de batería.
+ - Se implementó el módulo para lectura de 3 canales del ADC1 con DMA canal 1, estos tres ADCs serán utilizados para lectura de 2 LDR cableados y la tensión de batería.
+ - Se agrega librería para el manejo de la USART 3. La USART 3 será la encargada de comunicarse con el DISPLAY.
 
 Próximos pasos:
  - Agregar definiciones de tiempos en timers_manager.h en funcion de ms.
- - Emproiljar el módulo de lectura de ADCs, implementar la lectura del sensor de temperatura interna del micro.
- 
+ - Continuar con el desarrollo del módulo de gestión de la USART 3. 

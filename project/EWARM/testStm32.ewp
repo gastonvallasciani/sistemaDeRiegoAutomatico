@@ -326,6 +326,7 @@
           <state>$PROJ_DIR$/../user/timers</state>
           <state>$PROJ_DIR$/../user/led</state>
           <state>$PROJ_DIR$/../user/analog reading</state>
+          <state>$PROJ_DIR$/../user/uart</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -2025,6 +2026,12 @@
       <name>timers</name>
       <file>
         <name>$PROJ_DIR$\..\user\timers\timers_manager.c</name>
+      </file>
+    </group>
+    <group>
+      <name>uart</name>
+      <file>
+        <name>$PROJ_DIR$\..\user\uart\uart_manager.c</name>
       </file>
     </group>
   </group>

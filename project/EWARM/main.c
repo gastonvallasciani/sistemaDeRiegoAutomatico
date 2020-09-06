@@ -4,6 +4,7 @@
 #include "board.h"
 #include "led_manager.h"
 #include "analog_reading_manager.h"
+#include "uart_manager.h"
 
 int main()
 { 
@@ -12,10 +13,12 @@ int main()
  
    blink_led_init();
    analog_reading__init();
+   uart__init();
    
   while(1)
   {
     blink_led_handler();
+    uart__handler();
   }
 }
 //------------------------------------------------------------------------------

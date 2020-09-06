@@ -31,9 +31,20 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+
+#define TxBufferSize   (countof(TxBuffer) - 1)
+#define RxBufferSize   0x01
+    
 /* Private macro -------------------------------------------------------------*/
+#define countof(a)   (sizeof(a) / sizeof(*(a)))
 /* Private variables ---------------------------------------------------------*/
-__IO uint16_t ADC2ConvertedValue;
+uint8_t TxBuffer[] = "\n\rUSART Hyperterminal Interrupts Example: USART-Hyperterminal\
+ communication using Interrupt\n\r";
+uint8_t RxBuffer[RxBufferSize];
+uint8_t NbrOfDataToTransfer = TxBufferSize;
+uint8_t NbrOfDataToRead = RxBufferSize;
+uint8_t TxCounter = 0; 
+uint16_t RxCounter = 0; 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -145,7 +156,37 @@ void SysTick_Handler(void)
 /*  available peripheral interrupt handler's name please refer to the startup */
 /*  file (startup_stm32f10x_xx.s).                                            */
 /******************************************************************************/
+/**
+  * @brief  This function handles USARTx global interrupt request.
+  * @param  None
+  * @retval None
+  */
+void USART3_IRQHandler(void)
+{
+  if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
+  {
+    /* Read one byte from the receive data register */
+    RxBuffer[RxCounter++] = (USART_ReceiveData(USART3) & 0x7F);
 
+    if(RxCounter == NbrOfDataToRead)
+    {
+      /* Disable the EVAL_COM1 Receive interrupt */
+     // USART_ITConfig(USART3, USART_IT_RXNE, DISABLE);
+    }
+  }
+
+  if(USART_GetITStatus(USART3, USART_IT_TXE) != RESET)
+  {   
+    /* Write one byte to the transmit data register */
+    USART_SendData(USART3, TxBuffer[TxCounter++]);
+
+    if(TxCounter == NbrOfDataToTransfer)
+    {
+      /* Disable the EVAL_COM1 Transmit interrupt */
+      USART_ITConfig(USART3, USART_IT_TXE, DISABLE);
+    }
+  }
+}
 /**
   * @brief  This function handles PPP interrupt request.
   * @param  None

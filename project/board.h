@@ -42,6 +42,20 @@
 #define WIRED_LDR2_ADC_CHANNEL     ADC_Channel_4
 #define ANALOG_READING_MODE        GPIO_Mode_AIN
 #define ANALOG_READING_PORT        GPIOA
+
+/**
+  * @brief  Definitions for the DISPLAY USART pins.
+  * 
+  */
+#define DISPLAY_TX_PIN             GPIO_Pin_10
+#define DISPLAY_TX_PIN_MODE        GPIO_Mode_AF_PP
+#define DISPLAY_TX_PIN_SPEED       GPIO_Speed_50MHz
+
+#define DISPLAY_RX_PIN             GPIO_Pin_11
+#define DISPLAY_RX_PIN_MODE        GPIO_Mode_IN_FLOATING
+
+#define DISPLAY_USART_PORT         GPIOB
+
 //------------------------------------------------------------------------------
 //--------------------END OF FILE-----------------------------------------------
 //------------------------------------------------------------------------------
