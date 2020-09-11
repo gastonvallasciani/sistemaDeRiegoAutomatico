@@ -18,6 +18,7 @@
 //--------------------DECLARACION DE VARIABLES PRIVADAS-------------------------
 //------------------------------------------------------------------------------
 USART_InitTypeDef USART_InitStructure;
+static uart_t     uart;
 //------------------------------------------------------------------------------
 //--------------------DECLARACION DE VARIABLES EXTERNAS-------------------------
 //------------------------------------------------------------------------------
@@ -28,6 +29,7 @@ USART_InitTypeDef USART_InitStructure;
 void NVIC_Configuration(void);
 static void RCC_Configuration(void);
 static void GPIO_Configuration(void);
+static void uart_config(uint32_t end_of_sequence_time_ms, uint32_t rx_timeout_ms);
 //------------------------------------------------------------------------------
 //------------------DEFINICION DE FUNCIONES PRIVADAS----------------------------
 //------------------------------------------------------------------------------
@@ -72,15 +74,25 @@ GPIO_InitStructure.GPIO_Mode  = DISPLAY_RX_PIN_MODE;
 GPIO_Init(DISPLAY_USART_PORT, &GPIO_InitStructure);
 }
 //------------------------------------------------------------------------------
-void uart_config(void)
+void uart_config(uint32_t end_of_sequence_time_ms, 
+                 uint32_t rx_timeout_ms)
 {
+ 
+  uart.end_of_sequence_time = end_of_sequence_time_ms;
+  uart.timeout_rx_time      = rx_timeout_ms;
+  uart.data_sent            = false;
+  uart.data_received        = false;
+  uart.rx_length            = 0;
+  uart.tx_length            = 0;
+  uart.timeout_counter      = 0;
+  
   RCC_Configuration();
   
   GPIO_Configuration();
   /* NVIC configuration */
   NVIC_Configuration();
   
-  /* USARTx configuration ------------------------------------------------------*/
+  /* USARTx configuration -----------------------------------------------------*/
   /* USARTx configured as follow:
         - BaudRate = 9600 baud  
         - Word Length = 8 Bits
@@ -109,23 +121,57 @@ void uart_config(void)
   
     /* Enable the USART3 */
   USART_Cmd(USART3, ENABLE);
+  
+  reset_timer(TIMER__TIMEOUT_RX_UART);
+  reset_timer(TIMER__END_OF_SEQUENCE);
 }
 //------------------------------------------------------------------------------
 //------------------DEFINICION DE FUNCIONES PUBLICAS----------------------------
 //------------------------------------------------------------------------------
 void uart__init(void)
 {
-  uart_config();
+  uart_config(END_OF_SEQUENCE_TIME, RX_TIMEOUT_TIME);
 }
 //------------------------------------------------------------------------------
 void uart__handler(void)
 {
-  
+  if(uart.data_received == true)
+  {
+    uart.data_sent       = false;
+    uart.timeout_counter = 0;
+    USART_ITConfig(USART3, USART_IT_TXE, DISABLE);
+    USART_ITConfig(USART3, USART_IT_RXNE, DISABLE);
+    
+    reset_timer(TIMER__TIMEOUT_RX_UART);
+    reset_timer(TIMER__END_OF_SEQUENCE);
+  }
+// Se vencio el timeout de recepcion y no se recibio ningun byte
+  if(timeout_event(TIMER__TIMEOUT_RX_UART) && (uart.data_sent == true) && 
+    (uart.data_received == false))
+  {
+    uart.timeout_counter++;
+    USART_ITConfig(USART3, USART_IT_TXE, DISABLE);
+    USART_ITConfig(USART3, USART_IT_RXNE, DISABLE);
+  }
 }
 //------------------------------------------------------------------------------
-//void uart__send_data(uint8_t *tx_data, uint8_t tx_length)
-//{
-//}
+void uart__send_data(uint8_t *tx_data, uint8_t tx_length, uint8_t rx_length)
+{
+  uint8_t i;
+  
+  uart.rx_length = rx_length;
+  uart.tx_length = tx_length;
+  
+  for(i = 0; i < tx_length; i++)
+  {
+    uart.tx_buffer[i] = tx_data[i];
+  }
+}
+//------------------------------------------------------------------------------
+uint8_t uart__data_available_for_reading(void)
+{
+  return(uart.data_received);
+}
 //------------------------------------------------------------------------------
 //----------------------------END OF FILE---------------------------------------
 //------------------------------------------------------------------------------

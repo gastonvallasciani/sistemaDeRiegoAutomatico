@@ -15,11 +15,12 @@
 //------------------------------------------------------------------------------
 //--------------------MACROS Y DEFINES------------------------------------------
 //------------------------------------------------------------------------------
-#define MAX_TIMERS_QUANTITY  3
+#define MAX_TIMERS_QUANTITY     4
 
-#define TIMER__LED           0
-#define DEFAULT_NAME_TIMER2  1
-#define DEFAULT_NAME_TIMER3  2
+#define TIMER__LED              0
+#define TIMER__TIMEOUT_RX_UART  1
+#define TIMER__END_OF_SEQUENCE  2
+#define DEFAULT_NAME_TIMER3     3
 
 #define CLOCK_SECOND         1000
 //------------------------------------------------------------------------------

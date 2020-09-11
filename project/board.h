@@ -15,6 +15,7 @@
 // C standard libraries
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 // Std libraries
 #include "stm32f10x.h"
 //------------------------------------------------------------------------------
