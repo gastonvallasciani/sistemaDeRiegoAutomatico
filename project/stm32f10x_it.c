@@ -24,6 +24,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_it.h"
 #include "timers_manager.h"
+#include "uart_manager.h"
     
 /** @addtogroup STM32F10x_StdPeriph_Template
   * @{
@@ -31,20 +32,11 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-
-#define TxBufferSize   (countof(TxBuffer) - 1)
-#define RxBufferSize   0x01
     
 /* Private macro -------------------------------------------------------------*/
-#define countof(a)   (sizeof(a) / sizeof(*(a)))
 /* Private variables ---------------------------------------------------------*/
-uint8_t TxBuffer[] = "\n\rUSART Hyperterminal Interrupts Example: USART-Hyperterminal\
- communication using Interrupt\n\r";
-uint8_t RxBuffer[RxBufferSize];
-uint8_t NbrOfDataToTransfer = TxBufferSize;
-uint8_t NbrOfDataToRead = RxBufferSize;
-uint8_t TxCounter = 0; 
-uint16_t RxCounter = 0; 
+/* Extern variables ----------------------------------------------------------*/
+extern uart_t uart;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -165,25 +157,31 @@ void USART3_IRQHandler(void)
 {
   if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
   {
+    uart.receiving_data = true;
     /* Read one byte from the receive data register */
-    RxBuffer[RxCounter++] = (USART_ReceiveData(USART3) & 0x7F);
+    uart.rx_buffer[uart.rx_counter++] = (USART_ReceiveData(USART3) & 0x7F);
 
-    if(RxCounter == NbrOfDataToRead)
-    {
-      /* Disable the EVAL_COM1 Receive interrupt */
-     // USART_ITConfig(USART3, USART_IT_RXNE, DISABLE);
-    }
+    set_timer(TIMER__END_OF_SEQUENCE, uart.end_of_sequence_time);
   }
 
   if(USART_GetITStatus(USART3, USART_IT_TXE) != RESET)
   {   
     /* Write one byte to the transmit data register */
-    USART_SendData(USART3, TxBuffer[TxCounter++]);
-
-    if(TxCounter == NbrOfDataToTransfer)
+    USART_SendData(USART3, uart.tx_buffer[uart.tx_counter++]);
+    
+    if(uart.tx_counter == uart.tx_length)
     {
-      /* Disable the EVAL_COM1 Transmit interrupt */
+      /* All data have been sent */
+      /* Disable the USART3 Transmit interrupt */
       USART_ITConfig(USART3, USART_IT_TXE, DISABLE);
+      /* Set and start Rx Tiemout timer*/
+       set_timer(TIMER__TIMEOUT_RX_UART, uart.timeout_rx_time);
+       
+       uart.tx_length      = 0;
+       uart.tx_counter     = 0;
+       uart.data_sent      = true;
+       uart.data_received  = false;
+       uart.receiving_data = false;
     }
   }
 }

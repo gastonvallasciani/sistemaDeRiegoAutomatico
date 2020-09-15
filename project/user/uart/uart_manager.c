@@ -18,7 +18,7 @@
 //--------------------DECLARACION DE VARIABLES PRIVADAS-------------------------
 //------------------------------------------------------------------------------
 USART_InitTypeDef USART_InitStructure;
-static uart_t     uart;
+uart_t            uart;
 //------------------------------------------------------------------------------
 //--------------------DECLARACION DE VARIABLES EXTERNAS-------------------------
 //------------------------------------------------------------------------------
@@ -82,9 +82,11 @@ void uart_config(uint32_t end_of_sequence_time_ms,
   uart.timeout_rx_time      = rx_timeout_ms;
   uart.data_sent            = false;
   uart.data_received        = false;
-  uart.rx_length            = 0;
+  uart.receiving_data       = false;
   uart.tx_length            = 0;
   uart.timeout_counter      = 0;
+  uart.tx_counter           = 0;
+  uart.rx_counter           = 0;
   
   RCC_Configuration();
   
@@ -135,43 +137,87 @@ void uart__init(void)
 //------------------------------------------------------------------------------
 void uart__handler(void)
 {
-  if(uart.data_received == true)
+
+  if(timeout_event(TIMER__END_OF_SEQUENCE) && (uart.receiving_data == true))
   {
+    /* End of sequence has ocurred*/
+    uart.receiving_data  = false;
+    uart.data_received   = true;
     uart.data_sent       = false;
     uart.timeout_counter = 0;
-    USART_ITConfig(USART3, USART_IT_TXE, DISABLE);
+    /* Disable the USART3 Receive interrupt */
     USART_ITConfig(USART3, USART_IT_RXNE, DISABLE);
     
     reset_timer(TIMER__TIMEOUT_RX_UART);
     reset_timer(TIMER__END_OF_SEQUENCE);
   }
+
 // Se vencio el timeout de recepcion y no se recibio ningun byte
   if(timeout_event(TIMER__TIMEOUT_RX_UART) && (uart.data_sent == true) && 
-    (uart.data_received == false))
+    (uart.data_received == false) && (uart.receiving_data == false))
   {
     uart.timeout_counter++;
+    
     USART_ITConfig(USART3, USART_IT_TXE, DISABLE);
     USART_ITConfig(USART3, USART_IT_RXNE, DISABLE);
   }
 }
 //------------------------------------------------------------------------------
-void uart__send_data(uint8_t *tx_data, uint8_t tx_length, uint8_t rx_length)
+void uart__send_data(uint8_t *tx_data, uint8_t tx_length)
 {
-  uint8_t i;
+  uint8_t i = 0;
   
-  uart.rx_length = rx_length;
   uart.tx_length = tx_length;
   
   for(i = 0; i < tx_length; i++)
   {
     uart.tx_buffer[i] = tx_data[i];
   }
+  
+/* Enable USART 3 transmit interrupt */  
+  USART_ITConfig(USART3, USART_IT_TXE, ENABLE);
 }
 //------------------------------------------------------------------------------
 uint8_t uart__data_available_for_reading(void)
 {
   return(uart.data_received);
 }
+//------------------------------------------------------------------------------
+uint8_t uart__data_received_length(void)
+{
+  if(uart.data_received == true)
+  {
+    return(uart.rx_counter);
+  }
+  else
+  {
+    return(0);
+  }
+}
+//------------------------------------------------------------------------------
+uint8_t uart__get_received_data(uint8_t *rx_data)
+{
+  uint8_t i = 0;
+  
+  if((uart.rx_counter > 0) && (uart.data_received == true))
+  {
+    for(i = 0; i < uart.rx_counter; i++)
+    {
+      rx_data[i] = uart.rx_buffer[i];
+    }
+    
+    for(i = 0; i < uart.rx_counter; i++)
+    {
+      uart.rx_buffer[i] = 0;
+    }
+    uart.rx_counter    = 0;
+    uart.data_received = false;
+    
+    return(1);
+  }
+   return(0);
+}
+//------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 //----------------------------END OF FILE---------------------------------------
 //------------------------------------------------------------------------------

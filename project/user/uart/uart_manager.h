@@ -18,8 +18,8 @@
 #define END_OF_SEQUENCE_TIME 30
 #define RX_TIMEOUT_TIME      100
 
-#define RX_BUFFER_LENGTH     128
-#define TX_BUFFER_LENGTH     128
+#define RX_BUFFER_LENGTH     256
+#define TX_BUFFER_LENGTH     256
 //------------------------------------------------------------------------------
 //--------------------TYPEDEF---------------------------------------------------
 //------------------------------------------------------------------------------
@@ -29,10 +29,12 @@ typedef struct{
   uint8_t  rx_buffer[RX_BUFFER_LENGTH];
   uint8_t  tx_buffer[TX_BUFFER_LENGTH];
   uint8_t  tx_length;
-  uint8_t  rx_length;
   uint8_t  data_sent;
   uint8_t  data_received;
+  uint8_t  receiving_data;
   uint8_t  timeout_counter;
+  uint16_t tx_counter;
+  uint16_t rx_counter;
 }uart_t;
 //------------------------------------------------------------------------------
 //--------------------DECLARACION DE DATOS EXTERNOS-----------------------------
@@ -43,8 +45,10 @@ typedef struct{
 //------------------------------------------------------------------------------
 void uart__init(void);
 void uart__handler(void);
-void uart__send_data(uint8_t *tx_data, uint8_t tx_length, uint8_t rx_length);
+void uart__send_data(uint8_t *tx_data, uint8_t tx_length);
 uint8_t uart__data_available_for_reading(void);
+uint8_t uart__data_received_length(void);
+uint8_t uart__get_received_data(uint8_t *rx_data);
 //------------------------------------------------------------------------------
 //--------------------FIN DEL ARCHIVO-------------------------------------------
 //------------------------------------------------------------------------------
