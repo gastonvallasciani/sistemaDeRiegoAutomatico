@@ -51,6 +51,11 @@ void NVIC_Configuration(void)
   NVIC_Init(&NVIC_InitStructure);
 }
 //------------------------------------------------------------------------------
+/**
+  * @brief  Configures clocks for USART3 communication.
+  * @param  None
+  * @retval None
+  */
 static void RCC_Configuration(void)
 {
   /* Enable GPIO clock */
@@ -59,6 +64,11 @@ static void RCC_Configuration(void)
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
 }
 //------------------------------------------------------------------------------
+/**
+  * @brief  Configures GPIOs for USART3 master slave communication.
+  * @param  None
+  * @retval None
+  */
 static void GPIO_Configuration(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
@@ -75,6 +85,12 @@ static void GPIO_Configuration(void)
   GPIO_Init(DISPLAY_USART_PORT, &GPIO_InitStructure);
 }
 //------------------------------------------------------------------------------
+/**
+  * @brief  Configures low level USART 3 and high level uart parametters.
+  * @param  baudrate, word_length, stop_bits, parity, end_of_sequence_time_ms,
+  *         rx_timeout_ms 
+  * @retval None
+  */
 void uart_config(uint32_t baudrate, uint16_t word_length, uint16_t stop_bits, 
                  uint16_t parity, uint32_t end_of_sequence_time_ms, 
                  uint32_t rx_timeout_ms)
@@ -120,6 +136,11 @@ void uart_config(uint32_t baudrate, uint16_t word_length, uint16_t stop_bits,
 //------------------------------------------------------------------------------
 //------------------DEFINICION DE FUNCIONES PUBLICAS----------------------------
 //------------------------------------------------------------------------------
+/**
+  * @brief  uart init function. To be called on main.
+  * @param  None
+  * @retval None
+  */
 void uart__init(void)
 {
  /* USART3 configured as follow:
@@ -136,6 +157,11 @@ void uart__init(void)
               END_OF_SEQUENCE_TIME, RX_TIMEOUT_TIME);
 }
 //------------------------------------------------------------------------------
+/**
+  * @brief  uart handler function. To be called on main loop.
+  * @param  None
+  * @retval None
+  */
 void uart__handler(void)
 {
   uint16_t i = 0;
@@ -189,6 +215,12 @@ void uart__handler(void)
   }
 }
 //------------------------------------------------------------------------------
+/**
+  * @brief  function for sending data over USART3
+  * @param  *tx_data: pointer to tx buffer data.
+  *         tx_length: length of buffer to be send over USART3.
+  * @retval None
+  */
 void uart__send_data(uint8_t *tx_data, uint8_t tx_length)
 {
   uint8_t i = 0;
@@ -207,11 +239,23 @@ void uart__send_data(uint8_t *tx_data, uint8_t tx_length)
   }
 }
 //------------------------------------------------------------------------------
+/**
+  * @brief  function for checking if there is new data to be read
+  * @param  None
+  * @retval 1: new data available for reading.
+  *         0: no data available for reading.
+  */
 uint8_t uart__data_available_for_reading(void)
 {
   return(uart.data_received);
 }
 //------------------------------------------------------------------------------
+/**
+  * @brief  function for getting the length of received data
+  * @param  None
+  * @retval uart.rx_length: length of received data.
+  *         0: no data to be read.
+  */
 uint8_t uart__data_received_length(void)
 {
   if(uart.data_received == true)
@@ -224,6 +268,12 @@ uint8_t uart__data_received_length(void)
   }
 }
 //------------------------------------------------------------------------------
+/**
+  * @brief  function for getting received data
+  * @param  *rx_data: pointer for reading rx buffer.
+  * @retval 1: data read correctly.
+  *         0: no data available on read buffer.
+  */
 uint8_t uart__get_received_data(uint8_t *rx_data)
 {
   uint8_t i = 0;
