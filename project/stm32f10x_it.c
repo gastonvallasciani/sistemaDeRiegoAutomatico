@@ -180,6 +180,7 @@ void USART3_IRQHandler(void)
       USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
       /* Set and start Rx Tiemout timer*/
       set_timer(TIMER__TIMEOUT_RX_UART, uart.timeout_rx_time);
+      set_timer(TIMER__END_OF_SEQUENCE, uart.end_of_sequence_time);
      
       enable_timer(TIMER__TIMEOUT_RX_UART);
      

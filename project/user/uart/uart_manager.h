@@ -15,8 +15,8 @@
 //------------------------------------------------------------------------------
 //--------------------MACROS Y DEFINES------------------------------------------
 //------------------------------------------------------------------------------
-#define END_OF_SEQUENCE_TIME 25
-#define RX_TIMEOUT_TIME      800
+#define END_OF_SEQUENCE_TIME 20
+#define RX_TIMEOUT_TIME      500
 
 #define RX_BUFFER_LENGTH     256
 #define TX_BUFFER_LENGTH     256

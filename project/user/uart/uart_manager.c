@@ -28,7 +28,8 @@ uart_t            uart;
 void NVIC_Configuration(void);
 static void RCC_Configuration(void);
 static void GPIO_Configuration(void);
-static void uart_config(uint32_t baudrate, uint32_t end_of_sequence_time_ms, 
+void uart_config(uint32_t baudrate, uint16_t word_length, uint16_t stop_bits, 
+                 uint16_t parity, uint32_t end_of_sequence_time_ms, 
                  uint32_t rx_timeout_ms);
 //------------------------------------------------------------------------------
 //------------------DEFINICION DE FUNCIONES PRIVADAS----------------------------
@@ -74,10 +75,11 @@ static void GPIO_Configuration(void)
   GPIO_Init(DISPLAY_USART_PORT, &GPIO_InitStructure);
 }
 //------------------------------------------------------------------------------
-void uart_config(uint32_t baudrate, uint32_t end_of_sequence_time_ms, 
+void uart_config(uint32_t baudrate, uint16_t word_length, uint16_t stop_bits, 
+                 uint16_t parity, uint32_t end_of_sequence_time_ms, 
                  uint32_t rx_timeout_ms)
 {
- 
+ /* uart high level configuration */
   uart.end_of_sequence_time = end_of_sequence_time_ms;
   uart.timeout_rx_time      = rx_timeout_ms;
   uart.data_sent            = false;
@@ -89,31 +91,24 @@ void uart_config(uint32_t baudrate, uint32_t end_of_sequence_time_ms,
   uart.tx_counter           = 0;
   uart.rx_counter           = 0;
   uart.rx_status            = RX_ERROR;
-  
+ 
+  /* CLOCKS configuration */
   RCC_Configuration();
-  
+  /* GPIO configuration */
   GPIO_Configuration();
   /* NVIC configuration */
   NVIC_Configuration();
   
-  /* USARTx configuration -----------------------------------------------------*/
-  /* USARTx configured as follow:
-        - BaudRate = 9600 baud  
-        - Word Length = 8 Bits
-        - Two Stop Bit
-        - Odd parity
-        - Hardware flow control disabled (RTS and CTS signals)
-        - Receive and transmit enabled
-  */
-  
+  /* USART3 low level configuration */
   USART_InitStructure.USART_BaudRate            = baudrate;
-  USART_InitStructure.USART_WordLength          = USART_WordLength_8b;
-  USART_InitStructure.USART_StopBits            = USART_StopBits_1;
-  USART_InitStructure.USART_Parity              = USART_Parity_No;
+  USART_InitStructure.USART_WordLength          = word_length;
+  USART_InitStructure.USART_StopBits            = stop_bits;
+  USART_InitStructure.USART_Parity              = parity;
   USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
   USART_InitStructure.USART_Mode                = USART_Mode_Rx | USART_Mode_Tx;
   
   USART_Init(USART3, &USART_InitStructure);
+  
   enable_timer(TIMER__END_OF_SEQUENCE);
 
   /* Enable USART3 */
@@ -127,7 +122,18 @@ void uart_config(uint32_t baudrate, uint32_t end_of_sequence_time_ms,
 //------------------------------------------------------------------------------
 void uart__init(void)
 {
-  uart_config(115200, END_OF_SEQUENCE_TIME, RX_TIMEOUT_TIME);
+ /* USART3 configured as follow:
+    - BaudRate = 115200 baud  
+    - Word Length = 8 Bits
+    - Two Stop Bit
+    - Odd parity
+    - Hardware flow control disabled (RTS and CTS signals)
+    - Receive and transmit enabled
+    - End of sequence time: 20 ms
+    - Rx timeout time: 500 ms
+  */
+  uart_config(115200, USART_WordLength_8b, USART_StopBits_1, USART_Parity_No, 
+              END_OF_SEQUENCE_TIME, RX_TIMEOUT_TIME);
 }
 //------------------------------------------------------------------------------
 void uart__handler(void)
@@ -146,8 +152,6 @@ void uart__handler(void)
     uart.rx_counter      = 0;
     uart.timeout_counter = 0;
     uart.rx_status       = RX_OK;
-    
-    //disable_timer(TIMER__END_OF_SEQUENCE);
  
     /* Disable the USART3 Receive interrupt */
     USART_ITConfig(USART3, USART_IT_RXNE, DISABLE);
@@ -178,7 +182,6 @@ void uart__handler(void)
     uart.rx_counter      = 0;
     uart.rx_status       = RX_ERROR;
     
-    //disable_timer(TIMER__END_OF_SEQUENCE);
     disable_timer(TIMER__TIMEOUT_RX_UART);
     
     USART_ITConfig(USART3, USART_IT_TXE, DISABLE);
