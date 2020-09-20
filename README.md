@@ -11,3 +11,4 @@ Funciones implementadas hasta el momento:
 - Módulo de gestión de timers implementado sobre la base de tiempo del Systick.
 - Módulo de gestión del led loco.
 - Módulo de gestión de lectura de 3 canales del ADC1 con DMA canal 1.
+- Módulo de gestión de la uart mediante la usart 3, con timer de fin de secuencia y timer de timeout de recepción
