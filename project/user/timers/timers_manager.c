@@ -15,7 +15,7 @@
 //------------------------------------------------------------------------------
 static __IO uint32_t TimingDelay;
 
-static __IO uint32_t timing_value[MAX_TIMERS_QUANTITY];
+static __IO timer_info_t timer_info[MAX_TIMERS_QUANTITY];
 //------------------------------------------------------------------------------
 //--------------------DECLARACION DE VARIABLES EXTERNAS-------------------------
 //------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ void TimingDelay_Decrement(void)
   */
 void reset_timer(uint8_t timer_index)
 {
-  timing_value[timer_index] = 0;
+  timer_info[timer_index].timing_value = 0;
 }
 //------------------------------------------------------------------------------
 /**
@@ -75,7 +75,7 @@ void reset_timer(uint8_t timer_index)
   */
 void set_timer(uint8_t timer_index, uint32_t time_value)
 {
-  timing_value[timer_index] = time_value;
+  timer_info[timer_index].timing_value = time_value;
 }
 //------------------------------------------------------------------------------
 /**
@@ -89,9 +89,10 @@ void decrement_time_value(void)
   
   for(timer_index = 0; timer_index < MAX_TIMERS_QUANTITY; timer_index++)
   {
-    if(timing_value[timer_index] > 0)
+    if((timer_info[timer_index].timing_value > 0) && 
+       (timer_info[timer_index].enable == true))
     {
-      timing_value[timer_index]--;
+      timer_info[timer_index].timing_value--;
     }
   }
 }
@@ -103,7 +104,7 @@ void decrement_time_value(void)
   */
 uint8_t timeout_event(uint8_t timer_index)
 {
-    if(timing_value[timer_index] == 0)
+    if(timer_info[timer_index].timing_value == 0)
     {
       return(true);
     }
@@ -111,6 +112,36 @@ uint8_t timeout_event(uint8_t timer_index)
     {
       return(false);
     }
+}
+//------------------------------------------------------------------------------
+/**
+  * @brief  Enable timer
+  * @param  timer_index: number of the timer to enable.
+  * @retval None
+  */
+void enable_timer(uint8_t timer_index)
+{
+  timer_info[timer_index].enable = true;
+}
+//------------------------------------------------------------------------------
+/**
+  * @brief  Disable timer
+  * @param  timer_index: number of the timer to disable.
+  * @retval None
+  */
+void disable_timer(uint8_t timer_index)
+{
+  timer_info[timer_index].enable = false;
+}
+//------------------------------------------------------------------------------
+/**
+  * @brief  Return the enable status of the indicated timer.
+  * @param  timer_index: number of the timer who enable status y asked for.
+  * @retval 0 Disable, 1 Enable.
+  */
+uint8_t is_timer_enabled(uint8_t timer_index)
+{
+  return(timer_info[timer_index].enable);
 }
 //------------------------------------------------------------------------------
 //----------------------------END OF FILE---------------------------------------

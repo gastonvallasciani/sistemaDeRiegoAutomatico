@@ -11,6 +11,7 @@
 //------------------------------------------------------------------------------
 #include "led_manager.h"
 #include "timers_manager.h"
+#include "uart_manager.h"
 //------------------------------------------------------------------------------
 //--------------------DECLARACION DE VARIABLES INTERNAS-------------------------
 //------------------------------------------------------------------------------
@@ -47,6 +48,7 @@ void blink_led_init(void)
   GPIO_InitStructure.GPIO_Mode  = LED_MODE;
   GPIO_Init(LED_PORT, &GPIO_InitStructure);
   
+  enable_timer(TIMER__LED);
   reset_timer(TIMER__LED);
   set_timer(TIMER__LED, LED_TIME);
   
@@ -58,6 +60,8 @@ void blink_led_handler(void)
   if(timeout_event(TIMER__LED))
   {
     set_timer(TIMER__LED, LED_TIME);
+    
+    uart__send_data("HOLA", sizeof("HOLA"));
     
     if(GPIO_ReadOutputDataBit(GPIOC, GPIO_Pin_13) == true)
     {

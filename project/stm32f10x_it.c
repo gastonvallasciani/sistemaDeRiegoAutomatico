@@ -162,6 +162,9 @@ void USART3_IRQHandler(void)
     uart.rx_buffer[uart.rx_counter++] = (USART_ReceiveData(USART3) & 0x7F);
 
     set_timer(TIMER__END_OF_SEQUENCE, uart.end_of_sequence_time);
+    
+ //   enable_timer(TIMER__END_OF_SEQUENCE);
+    disable_timer(TIMER__TIMEOUT_RX_UART);
   }
 
   if(USART_GetITStatus(USART3, USART_IT_TXE) != RESET)
@@ -174,14 +177,19 @@ void USART3_IRQHandler(void)
       /* All data have been sent */
       /* Disable the USART3 Transmit interrupt */
       USART_ITConfig(USART3, USART_IT_TXE, DISABLE);
+      USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
       /* Set and start Rx Tiemout timer*/
-       set_timer(TIMER__TIMEOUT_RX_UART, uart.timeout_rx_time);
-       
-       uart.tx_length      = 0;
-       uart.tx_counter     = 0;
-       uart.data_sent      = true;
-       uart.data_received  = false;
-       uart.receiving_data = false;
+      set_timer(TIMER__TIMEOUT_RX_UART, uart.timeout_rx_time);
+     
+      enable_timer(TIMER__TIMEOUT_RX_UART);
+     
+      uart.tx_length      = 0;
+      uart.tx_counter     = 0;
+      uart.rx_length      = 0;
+      uart.rx_counter     = 0;
+      uart.data_sent      = true;
+      uart.data_received  = false;
+      uart.receiving_data = false;
     }
   }
 }
