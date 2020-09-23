@@ -2210,6 +2210,12 @@
         <name>$PROJ_DIR$\..\user\uart\uart_manager.c</name>
       </file>
     </group>
+    <group>
+      <name>wdt</name>
+      <file>
+        <name>$PROJ_DIR$\..\user\wdt\wdt_manager.c</name>
+      </file>
+    </group>
   </group>
   <file>
     <name>$PROJ_DIR$\main.c</name>
