@@ -330,6 +330,7 @@
           <state>$PROJ_DIR$/../user/uart</state>
           <state>$PROJ_DIR$/../user/irrigation</state>
           <state>$PROJ_DIR$/../user/wdt</state>
+          <state>$PROJ_DIR$/../user/dataflash</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -2017,6 +2018,12 @@
       <name>analog reading</name>
       <file>
         <name>$PROJ_DIR$\..\user\analog reading\analog_reading_manager.c</name>
+      </file>
+    </group>
+    <group>
+      <name>dataflash</name>
+      <file>
+        <name>$PROJ_DIR$\..\user\dataflash\dataflash_manager.c</name>
       </file>
     </group>
     <group>

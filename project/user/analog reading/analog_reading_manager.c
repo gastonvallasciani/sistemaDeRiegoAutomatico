@@ -1,11 +1,3 @@
-/**
-*	@file
-*	@author
-*	@date
-*	@brief
-*
-*
-*/
 //------------------------------------------------------------------------------
 //------------------------------INCLUDES----------------------------------------
 //------------------------------------------------------------------------------
@@ -52,7 +44,7 @@ void RCC_Configuration(void)
   /* Enable ADC1 and GPIOC clock */
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_GPIOA, ENABLE);
 }
-
+//------------------------------------------------------------------------------
 /**
   * @brief  Configures the different GPIO ports as analog inputs.
   * @param  None
@@ -71,11 +63,6 @@ void GPIO_Configuration(void)
 //------------------------------------------------------------------------------
 //------------------DEFINICION DE FUNCIONES PUBLICAS----------------------------
 //------------------------------------------------------------------------------
-/**
-  * @brief  Analog reading initialize function.
-  * @param  None
-  * @retval None
-  */
 void analog_reading__init(void)
 {
   /* System clocks configuration ---------------------------------------------*/
@@ -141,36 +128,18 @@ void analog_reading__init(void)
   ADC_SoftwareStartConvCmd(ADC1, ENABLE);
 }
 //------------------------------------------------------------------------------
-/**
-  * @brief  Return the battery voltage reading value in the param given as a 
-  *         pointer.
-  * @param  battery_voltage pointer to the return value.
-  * @retval 1 always
-  */
 uint8_t analog_reading__get_battery_voltage(uint16_t *battery_voltage)
 {
   *battery_voltage = BATTERY_VOLTAGE;
   return(1);
 }
 //------------------------------------------------------------------------------
-/**
-  * @brief  Return the wired ldr 1 reading value in the param given as a 
-  *         pointer.
-  * @param  wired_ldr1_reading_value pointer to the return value.
-  * @retval 1 always
-  */
 uint8_t analog_reading__get_ldr1_reading(uint16_t *wired_ldr1_reading_value)
 {
   *wired_ldr1_reading_value = WIRED_LDR1_READING_VALUE;
   return(1);
 }
 //------------------------------------------------------------------------------
-/**
-  * @brief  Return the wired ldr 2 reading value in the param given as a 
-  *         pointer.
-  * @param  wired_ldr2_reading_value pointer to the return value.
-  * @retval 1 always
-  */
 uint8_t analog_reading__get_ldr2_reading(uint16_t *wired_ldr2_reading_value)
 {
   *wired_ldr2_reading_value = WIRED_LDR2_READING_VALUE;

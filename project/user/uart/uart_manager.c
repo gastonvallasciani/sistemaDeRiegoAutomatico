@@ -1,12 +1,3 @@
-/**
-*	@file    uart_manager.c
-*	@author
-*	@date    5/09/2020
-*	@brief   Uart configurated as master. Sends and then receive messages from 
-*          USART 3.
-*
-*
-*/
 //------------------------------------------------------------------------------
 //------------------------------INCLUDES----------------------------------------
 //------------------------------------------------------------------------------
@@ -136,11 +127,6 @@ void uart_config(uint32_t baudrate, uint16_t word_length, uint16_t stop_bits,
 //------------------------------------------------------------------------------
 //------------------DEFINICION DE FUNCIONES PUBLICAS----------------------------
 //------------------------------------------------------------------------------
-/**
-  * @brief  uart init function. To be called on main.
-  * @param  None
-  * @retval None
-  */
 void uart__init(void)
 {
  /* USART3 configured as follow:
@@ -157,11 +143,6 @@ void uart__init(void)
               END_OF_SEQUENCE_TIME, RX_TIMEOUT_TIME);
 }
 //------------------------------------------------------------------------------
-/**
-  * @brief  uart handler function. To be called on main loop.
-  * @param  None
-  * @retval None
-  */
 void uart__handler(void)
 {
   uint16_t i = 0;
@@ -215,12 +196,6 @@ void uart__handler(void)
   }
 }
 //------------------------------------------------------------------------------
-/**
-  * @brief  function for sending data over USART3
-  * @param  *tx_data: pointer to tx buffer data.
-  *         tx_length: length of buffer to be send over USART3.
-  * @retval None
-  */
 void uart__send_data(uint8_t *tx_data, uint8_t tx_length)
 {
   uint8_t i = 0;
@@ -239,23 +214,11 @@ void uart__send_data(uint8_t *tx_data, uint8_t tx_length)
   }
 }
 //------------------------------------------------------------------------------
-/**
-  * @brief  function for checking if there is new data to be read
-  * @param  None
-  * @retval 1: new data available for reading.
-  *         0: no data available for reading.
-  */
 uint8_t uart__data_available_for_reading(void)
 {
   return(uart.data_received);
 }
 //------------------------------------------------------------------------------
-/**
-  * @brief  function for getting the length of received data
-  * @param  None
-  * @retval uart.rx_length: length of received data.
-  *         0: no data to be read.
-  */
 uint8_t uart__data_received_length(void)
 {
   if(uart.data_received == true)
@@ -268,12 +231,6 @@ uint8_t uart__data_received_length(void)
   }
 }
 //------------------------------------------------------------------------------
-/**
-  * @brief  function for getting received data
-  * @param  *rx_data: pointer for reading rx buffer.
-  * @retval 1: data read correctly.
-  *         0: no data available on read buffer.
-  */
 uint8_t uart__get_received_data(uint8_t *rx_data)
 {
   uint8_t i = 0;
@@ -294,7 +251,6 @@ uint8_t uart__get_received_data(uint8_t *rx_data)
   }
    return(0);
 }
-//------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 //----------------------------END OF FILE---------------------------------------
 //------------------------------------------------------------------------------

@@ -8,6 +8,7 @@
 #include "global_irrigation_manager.h"
 #include "wdt_manager.h"
 #include "timers_manager.h"
+#include "dataflash_manager.h"
 
 int main()
 { 
@@ -22,6 +23,11 @@ int main()
    wdt__init();
 #endif
    
+ // if(dataflash__get_first_time_status() != FIRST_TIME_FLAG_SET);
+  {
+  //  dataflash__first_time();
+  }
+  
   while(1)
   {
     blink_led_handler();

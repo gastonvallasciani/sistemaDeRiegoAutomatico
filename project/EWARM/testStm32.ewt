@@ -2187,6 +2187,12 @@
       </file>
     </group>
     <group>
+      <name>dataflash</name>
+      <file>
+        <name>$PROJ_DIR$\..\user\dataflash\dataflash_manager.c</name>
+      </file>
+    </group>
+    <group>
       <name>irrigation</name>
       <file>
         <name>$PROJ_DIR$\..\user\irrigation\global_irrigation_manager.c</name>
