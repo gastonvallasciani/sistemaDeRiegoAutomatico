@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['analog_5freading_5fmanager_2ec_51',['analog_reading_manager.c',['../analog__reading__manager_8c.html',1,'']]]
+  ['dataflash_5fmanager_2ec_48',['dataflash_manager.c',['../dataflash__manager_8c.html',1,'']]],
+  ['dataflash_5fmanager_2eh_49',['dataflash_manager.h',['../dataflash__manager_8h.html',1,'']]]
 ];

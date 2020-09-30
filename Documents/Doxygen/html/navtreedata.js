@@ -42,7 +42,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"analog__reading__manager_8c.html"
+"analog__reading__manager_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

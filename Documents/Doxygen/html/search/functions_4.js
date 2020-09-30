@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gpio_5fconfiguration_72',['GPIO_Configuration',['../analog__reading__manager_8c.html#a239625759a9212f5253a0d36cc69db79',1,'analog_reading_manager.c']]]
+  ['is_5ftimer_5fenabled_68',['is_timer_enabled',['../timers__manager_8c.html#ab9b0b9d0f8f1861d8796ed39e31fe464',1,'is_timer_enabled(uint8_t timer_index):&#160;timers_manager.c'],['../timers__manager_8h.html#ab9b0b9d0f8f1861d8796ed39e31fe464',1,'is_timer_enabled(uint8_t timer_index):&#160;timers_manager.c']]]
 ];

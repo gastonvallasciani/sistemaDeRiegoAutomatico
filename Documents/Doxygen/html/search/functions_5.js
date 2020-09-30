@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['is_5ftimer_5fenabled_73',['is_timer_enabled',['../timers__manager_8c.html#ab9b0b9d0f8f1861d8796ed39e31fe464',1,'is_timer_enabled(uint8_t timer_index):&#160;timers_manager.c'],['../timers__manager_8h.html#ab9b0b9d0f8f1861d8796ed39e31fe464',1,'is_timer_enabled(uint8_t timer_index):&#160;timers_manager.c']]]
+  ['reset_5ftimer_69',['reset_timer',['../timers__manager_8c.html#a03c2fec5c62c18414ec99d1eaab478af',1,'reset_timer(uint8_t timer_index):&#160;timers_manager.c'],['../timers__manager_8h.html#a03c2fec5c62c18414ec99d1eaab478af',1,'reset_timer(uint8_t timer_index):&#160;timers_manager.c']]]
 ];
