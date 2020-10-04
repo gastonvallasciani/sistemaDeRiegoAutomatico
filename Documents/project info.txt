@@ -14,7 +14,9 @@ Hecho:
  - Se creó un repositorio Git y cargó el proyecto en github.
  - Se implementó el módulo para lectura de 3 canales del ADC1 con DMA canal 1, estos tres ADCs serán utilizados para lectura de 2 LDR cableados y la tensión de batería.
  - Se agrega librería para el manejo de la USART 3. La USART 3 será la encargada de comunicarse con el DISPLAY.
+ - Se agrega la documentacion con doxygen.
 
 Próximos pasos:
  - Agregar definiciones de tiempos en timers_manager.h en funcion de ms.
- - Continuar con el desarrollo del módulo de gestión de la USART 3. 
+ - Continuar con la documentacion de modulos con formato doxygen.
+ - Trabajar en el modulo que emula una eeprom con la flash del microcontrolador.
