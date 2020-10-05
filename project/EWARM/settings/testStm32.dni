@@ -12,7 +12,7 @@ ByteLimit=50
 stlinkserialNo=67725286
 stlinkfoundProbes=
 [DebugChecksum]
-Checksum=-1801913545
+Checksum=737463383
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -57,7 +57,8 @@ MultiCoreRunAll=1
 Fmt0=uart_t-rx_length	3	0
 [watch_formats]
 Fmt0={W}1:data_saved	3	0
-Fmt1={W}1:uart.tx_length	3	0
+Fmt1={W}1:first_time_flag	3	0
+Fmt2={W}1:uart.tx_length	3	0
 [Trace2]
 Enabled=0
 ShowSource=0

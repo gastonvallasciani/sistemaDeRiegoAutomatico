@@ -10,6 +10,8 @@
 #include "timers_manager.h"
 #include "dataflash_manager.h"
 
+uint32_t first_time_flag = 0;
+
 int main()
 { 
   /* Systick configuration: the systick timer interrupts every 1ms */
@@ -23,9 +25,11 @@ int main()
    wdt__init();
 #endif
    
- // if(dataflash__get_first_time_status() != FIRST_TIME_FLAG_SET);
+  first_time_flag = dataflash__get_first_time_status(); 
+   
+  if(first_time_flag != FIRST_TIME_FLAG_SET)
   {
-  //  dataflash__first_time();
+    dataflash__first_time();
   }
   
   while(1)
